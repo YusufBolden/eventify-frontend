@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
+baseURL: 'https://eventify-g0fv.onrender.com/api',
   withCredentials: false,
 })
 
