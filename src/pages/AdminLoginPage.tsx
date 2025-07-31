@@ -19,7 +19,7 @@ const AdminLoginPage = () => {
 
       if (userInfo.isAdmin) {
         localStorage.setItem('userInfo', JSON.stringify(userInfo))
-        navigate('/admin')
+        navigate('/')
         window.location.reload()
       } else {
         setError('Access denied. Admins only.')
