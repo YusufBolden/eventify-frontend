@@ -25,6 +25,12 @@ const HomePage = () => {
         onClick={() => navigate('/dashboard')}
         className="bg-white border border-indigo-600 rounded-lg p-6 text-indigo-700 hover:bg-indigo-50 font-semibold transition"
       >
+        📅 Manage Users Events
+      </button>
+      <button
+        onClick={() => navigate('/dashboard')}
+        className="bg-white border border-indigo-600 rounded-lg p-6 text-indigo-700 hover:bg-indigo-50 font-semibold transition"
+      >
         👥 Manage Users
       </button>
       <button
@@ -34,16 +40,16 @@ const HomePage = () => {
         ⚙️ Admin Settings
       </button>
       <button
-        onClick={() => navigate('/events')}
-        className="bg-white border border-indigo-600 rounded-lg p-6 text-indigo-700 hover:bg-indigo-50 font-semibold transition"
-      >
-        📅 All Events
-      </button>
-      <button
         onClick={() => navigate('/reports')}
         className="bg-white border border-indigo-600 rounded-lg p-6 text-indigo-700 hover:bg-indigo-50 font-semibold transition"
       >
         📊 Reports
+      </button>
+      <button
+        onClick={() => navigate('/my-events')}
+        className="bg-white border border-indigo-600 rounded-lg p-6 text-indigo-700 hover:bg-indigo-50 font-semibold transition"
+      >
+        📂 My Events
       </button>
       <button
         onClick={handleLogout}
