@@ -31,6 +31,12 @@ const HomePage = () => {
         onClick={() => navigate('/dashboard')}
         className="bg-white border border-indigo-600 rounded-lg p-6 text-indigo-700 hover:bg-indigo-50 font-semibold transition"
       >
+        📆 My Events
+      </button>
+      <button
+        onClick={() => navigate('/admin')}
+        className="bg-white border border-indigo-600 rounded-lg p-6 text-indigo-700 hover:bg-indigo-50 font-semibold transition"
+      >
         👥 Manage Users
       </button>
       <button
@@ -44,12 +50,6 @@ const HomePage = () => {
         className="bg-white border border-indigo-600 rounded-lg p-6 text-indigo-700 hover:bg-indigo-50 font-semibold transition"
       >
         📊 Reports
-      </button>
-      <button
-        onClick={() => navigate('/my-events')}
-        className="bg-white border border-indigo-600 rounded-lg p-6 text-indigo-700 hover:bg-indigo-50 font-semibold transition"
-      >
-        📂 My Events
       </button>
       <button
         onClick={handleLogout}
@@ -96,7 +96,7 @@ const HomePage = () => {
   )
 
   return (
-    <div className="bg-[#E9D5FF] min-h-screen flex justify-center py-16 px-4">
+    <div className="bg-[#E9D5FF] flex flex-col justify-center items-center flex-grow py-16 px-4">
       <div className="text-center w-full max-w-5xl">
         {user ? (
           <>
@@ -111,8 +111,11 @@ const HomePage = () => {
         ) : (
           <>
             <h1 className="text-4xl md:text-5xl font-bold text-indigo-700 mb-8">
-              Welcome to Eventify
+              Plan Better. Celebrate Smarter.
             </h1>
+            <p className="text-lg text-gray-700 mb-12 max-w-xl mx-auto">
+              Eventify helps you manage events, track guests, and simplify planning for any occasion.
+            </p>
             <div className="space-x-4">
               <Link
                 to="/login"
