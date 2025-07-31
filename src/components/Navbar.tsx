@@ -19,7 +19,9 @@ const Navbar = () => {
         <Link to="/" className="text-white text-xl font-bold">
           Eventify
         </Link>
+
         <div className="space-x-4">
+          {/* Home link always shown */}
           <Link
             to="/"
             className={`py-2 px-4 font-semibold rounded ${
@@ -29,19 +31,67 @@ const Navbar = () => {
             Home
           </Link>
 
-          {user && (
-            <Link
-              to={user.isAdmin ? '/admin' : '/dashboard'}
-              className={`py-2 px-4 font-semibold rounded ${
-                isActive('/dashboard') || isActive('/admin')
-                  ? 'bg-white text-indigo-600'
-                  : 'text-white hover:bg-indigo-500'
-              }`}
-            >
-              {user.isAdmin ? 'Admin' : 'Dashboard'}
-            </Link>
+          {/* Logged-in users */}
+          {user && !user.isAdmin && (
+            <>
+              <Link
+                to="/dashboard"
+                className={`py-2 px-4 font-semibold rounded ${
+                  isActive('/dashboard') ? 'bg-white text-indigo-600' : 'text-white hover:bg-indigo-500'
+                }`}
+              >
+                Events
+              </Link>
+              <Link
+                to="/guests"
+                className={`py-2 px-4 font-semibold rounded ${
+                  isActive('/guests') ? 'bg-white text-indigo-600' : 'text-white hover:bg-indigo-500'
+                }`}
+              >
+                Guests
+              </Link>
+              <Link
+                to="/settings"
+                className={`py-2 px-4 font-semibold rounded ${
+                  isActive('/settings') ? 'bg-white text-indigo-600' : 'text-white hover:bg-indigo-500'
+                }`}
+              >
+                Settings
+              </Link>
+            </>
           )}
 
+          {/* Logged-in admins */}
+          {user?.isAdmin && (
+            <>
+              <Link
+                to="/dashboard"
+                className={`py-2 px-4 font-semibold rounded ${
+                  isActive('/dashboard') ? 'bg-white text-indigo-600' : 'text-white hover:bg-indigo-500'
+                }`}
+              >
+                Users
+              </Link>
+              <Link
+                to="/settings"
+                className={`py-2 px-4 font-semibold rounded ${
+                  isActive('/settings') ? 'bg-white text-indigo-600' : 'text-white hover:bg-indigo-500'
+                }`}
+              >
+                Settings
+              </Link>
+              <Link
+                to="/reports"
+                className={`py-2 px-4 font-semibold rounded ${
+                  isActive('/reports') ? 'bg-white text-indigo-600' : 'text-white hover:bg-indigo-500'
+                }`}
+              >
+                Reports
+              </Link>
+            </>
+          )}
+
+          {/* Guest links */}
           {!user && (
             <>
               <Link
@@ -71,6 +121,7 @@ const Navbar = () => {
             </>
           )}
 
+          {/* Logout for logged-in users */}
           {user && (
             <button
               onClick={handleLogout}
