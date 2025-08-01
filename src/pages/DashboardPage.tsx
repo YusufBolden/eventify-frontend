@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import api from "../api/axios";
 import EventModal from "../modals/EventModal";
 import type { Event } from "../types/Event";
@@ -15,9 +15,16 @@ const DashboardPage = () => {
   const [eventToEdit, setEventToEdit] = useState<Event | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [inputPage, setInputPage] = useState("1");
-  const eventsPerPage = 3;
 
+  const eventsPerPage = 3;
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const queryParams = new URLSearchParams(location.search);
+  const view = queryParams.get("view") || "my";
+
+  const storedUser = localStorage.getItem("userInfo");
+  const user = storedUser ? JSON.parse(storedUser) : null;
 
   useEffect(() => {
     document.body.classList.remove("overflow-hidden");
@@ -26,7 +33,13 @@ const DashboardPage = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const res = await api.get("/events");
+        let endpoint = "/events/my-events";
+        if (user?.isAdmin && view === "all") {
+          endpoint = "/events";
+        }
+        const res = await api.get(endpoint, {
+          headers: { Authorization: `Bearer ${user?.token}` },
+        });
         setEvents(res.data);
       } catch {
         setError("Failed to load events.");
@@ -35,8 +48,10 @@ const DashboardPage = () => {
       }
     };
 
-    fetchEvents();
-  }, []);
+    if (user) {
+      fetchEvents();
+    }
+  }, [user, view]);
 
   const handleEventCreated = (newEvent: Event) => {
     setEvents((prev) => [...prev, newEvent]);
@@ -55,7 +70,9 @@ const DashboardPage = () => {
     if (!confirmDelete) return;
 
     try {
-      await api.delete(`/events/${id}`);
+      await api.delete(`/events/${id}`, {
+        headers: { Authorization: `Bearer ${user?.token}` },
+      });
       setEvents((prev) => prev.filter((ev) => ev._id !== id));
       toast.success("Event deleted successfully");
     } catch {
@@ -75,7 +92,7 @@ const DashboardPage = () => {
     setEventToEdit(null);
   };
 
-  // Pagination logic
+  // Pagination
   const totalPages = Math.ceil(events.length / eventsPerPage);
   const indexOfLast = currentPage * eventsPerPage;
   const indexOfFirst = indexOfLast - eventsPerPage;
@@ -83,15 +100,17 @@ const DashboardPage = () => {
 
   const handleNext = () => {
     if (currentPage < totalPages) {
-      setCurrentPage((prev) => prev + 1);
-      setInputPage(String(currentPage + 1));
+      const nextPage = currentPage + 1;
+      setCurrentPage(nextPage);
+      setInputPage(String(nextPage));
     }
   };
 
   const handlePrev = () => {
     if (currentPage > 1) {
-      setCurrentPage((prev) => prev - 1);
-      setInputPage(String(currentPage - 1));
+      const prevPage = currentPage - 1;
+      setCurrentPage(prevPage);
+      setInputPage(String(prevPage));
     }
   };
 
@@ -114,7 +133,13 @@ const DashboardPage = () => {
     <div className="px-4 py-8 text-[#4338CA]">
       <div className="max-w-2xl mx-auto">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold">My Events</h1>
+          <h1 className="text-3xl font-bold">
+            {user?.isAdmin
+              ? view === "all"
+                ? "All Events"
+                : "My Events"
+              : "My Events"}
+          </h1>
           <button
             onClick={() => setShowModal(true)}
             className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-md"
@@ -128,7 +153,7 @@ const DashboardPage = () => {
           <p className="text-red-600 text-center mb-2">{error}</p>
         )}
         {!loading && events.length === 0 && (
-          <p className="text-center text-gray-700">You have no events yet.</p>
+          <p className="text-center text-gray-700">No events found.</p>
         )}
 
         <ul className="space-y-4">

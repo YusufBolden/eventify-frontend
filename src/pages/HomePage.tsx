@@ -7,9 +7,9 @@ const HomePage = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    const stored = localStorage.getItem('userInfo')
-    if (stored) {
-      setUser(JSON.parse(stored))
+    const storedUser = localStorage.getItem('userInfo')
+    if (storedUser) {
+      setUser(JSON.parse(storedUser))
     }
   }, [])
 
@@ -19,16 +19,16 @@ const HomePage = () => {
     window.location.reload()
   }
 
-  const renderAdminGrid = () => (
+  const AdminGrid = () => (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
       <button
-        onClick={() => navigate('/dashboard')}
+        onClick={() => navigate('/dashboard?view=all')}
         className="bg-white border border-indigo-600 rounded-lg p-6 text-indigo-700 hover:bg-indigo-50 font-semibold transition"
       >
         📅 Manage Users Events
       </button>
       <button
-        onClick={() => navigate('/dashboard')}
+        onClick={() => navigate('/dashboard?view=my')}
         className="bg-white border border-indigo-600 rounded-lg p-6 text-indigo-700 hover:bg-indigo-50 font-semibold transition"
       >
         📆 My Events
@@ -60,10 +60,10 @@ const HomePage = () => {
     </div>
   )
 
-  const renderUserGrid = () => (
+  const UserGrid = () => (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
       <button
-        onClick={() => navigate('/dashboard')}
+        onClick={() => navigate('/dashboard?view=my')}
         className="bg-white border border-indigo-600 rounded-lg p-6 text-indigo-700 hover:bg-indigo-50 font-semibold transition"
       >
         📅 My Events
@@ -106,7 +106,7 @@ const HomePage = () => {
             <p className="text-lg text-gray-700 mb-12">
               Navigate through your {user.isAdmin ? 'admin tools' : 'dashboard'}.
             </p>
-            {user.isAdmin ? renderAdminGrid() : renderUserGrid()}
+            {user.isAdmin ? <AdminGrid /> : <UserGrid />}
           </>
         ) : (
           <>
