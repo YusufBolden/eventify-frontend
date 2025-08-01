@@ -4,4 +4,5 @@ export type UserInfo = {
   email: string
   isAdmin?: boolean
   token: string
+  profilePic?: string
 }
