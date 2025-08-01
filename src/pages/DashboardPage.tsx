@@ -15,8 +15,8 @@ const DashboardPage = () => {
   const [eventToEdit, setEventToEdit] = useState<Event | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [inputPage, setInputPage] = useState("1");
+  const [eventsPerPage, setEventsPerPage] = useState(3);
 
-  const eventsPerPage = 3;
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -90,6 +90,12 @@ const DashboardPage = () => {
     setShowModal(false);
     setEditMode(false);
     setEventToEdit(null);
+  };
+
+  const handlePageSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setEventsPerPage(parseInt(e.target.value));
+    setCurrentPage(1);
+    setInputPage("1");
   };
 
   // Pagination
@@ -198,8 +204,26 @@ const DashboardPage = () => {
           ))}
         </ul>
 
+        {/* Page size selector - always visible */}
+        <div className="flex justify-center mt-8 mb-4">
+          <div className="flex items-center gap-2 text-lg font-semibold">
+            <span>Show</span>
+            <select
+              value={eventsPerPage}
+              onChange={handlePageSizeChange}
+              className="border rounded px-2 py-1"
+            >
+              <option value={3}>3</option>
+              <option value={6}>6</option>
+              <option value={9}>9</option>
+            </select>
+            <span>per page</span>
+          </div>
+        </div>
+
+        {/* Pagination controls - only if needed */}
         {events.length > eventsPerPage && (
-          <div className="flex justify-center mt-8 flex-wrap gap-4 text-lg font-semibold">
+          <div className="flex flex-wrap justify-center gap-4 text-lg font-semibold">
             <button
               onClick={handlePrev}
               disabled={currentPage === 1}
