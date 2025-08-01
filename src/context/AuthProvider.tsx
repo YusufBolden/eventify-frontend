@@ -6,6 +6,7 @@ import type { AuthContextType, AuthProviderProps } from '../types/Auth'
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<UserInfo | null>(null)
 
+  // Load stored user on mount
   useEffect(() => {
     const storedUser = localStorage.getItem('userInfo')
     if (storedUser) {
@@ -13,14 +14,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }, [])
 
+  // Sync logout/login changes across tabs
   useEffect(() => {
-    const syncLogout = () => {
+    const syncAuthState = () => {
       const storedUser = localStorage.getItem('userInfo')
       setUser(storedUser ? JSON.parse(storedUser) : null)
     }
 
-    window.addEventListener('storage', syncLogout)
-    return () => window.removeEventListener('storage', syncLogout)
+    window.addEventListener('storage', syncAuthState)
+    return () => window.removeEventListener('storage', syncAuthState)
   }, [])
 
   const login = (userData: UserInfo) => {
@@ -33,7 +35,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setUser(null)
   }
 
-  const value: AuthContextType = { user, login, logout }
+  const value: AuthContextType = {
+    user,
+    setUser, // profile updates can sync immediately
+    login,
+    logout,
+  }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
