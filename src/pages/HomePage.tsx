@@ -1,25 +1,14 @@
 import { Link, useNavigate } from 'react-router-dom'
-import { useEffect, useState } from 'react'
-import type { UserInfo } from '../types/User'
+import { useAuth } from '../context/useAuth'
 
 const HomePage = () => {
-  const [user, setUser] = useState<UserInfo | null>(null)
+  const { user, logout } = useAuth()
   const navigate = useNavigate()
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem('userInfo')
-    if (storedUser) {
-      setUser(JSON.parse(storedUser))
-    }
-  }, [])
-
-const handleLogout = () => {
-  localStorage.removeItem('userInfo')
-  navigate('/', { replace: true })
-  setTimeout(() => {
-    window.location.reload()
-  }, 50)
-}
+  const handleLogout = () => {
+    logout()
+    navigate('/')
+  }
 
   const AdminGrid = () => (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
@@ -80,13 +69,7 @@ const handleLogout = () => {
         onClick={() => navigate('/settings')}
         className="bg-white border border-indigo-600 rounded-lg p-6 text-indigo-700 hover:bg-indigo-50 font-semibold transition"
       >
-        ⚙️ User Settings
-      </button>
-      <button
-        onClick={() => navigate('/profile')}
-        className="bg-white border border-indigo-600 rounded-lg p-6 text-indigo-700 hover:bg-indigo-50 font-semibold transition"
-      >
-        🔐 Profile
+        ⚙️ Settings
       </button>
       <button
         onClick={handleLogout}

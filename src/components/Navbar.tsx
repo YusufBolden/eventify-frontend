@@ -10,7 +10,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout()
-    navigate('/login')
+    navigate('/') // ✅ Always go to home after logout
   }
 
   return (

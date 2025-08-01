@@ -5,6 +5,7 @@ import EventModal from "../modals/EventModal";
 import type { Event } from "../types/Event";
 import { FaTrash, FaPen } from "react-icons/fa";
 import { toast } from "react-hot-toast";
+import { useAuth } from "../context/useAuth";
 
 const DashboardPage = () => {
   const [events, setEvents] = useState<Event[]>([]);
@@ -19,12 +20,10 @@ const DashboardPage = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
+  const { user, logout } = useAuth(); // gets global user + logout
 
   const queryParams = new URLSearchParams(location.search);
   const view = queryParams.get("view") || "my";
-
-  const storedUser = localStorage.getItem("userInfo");
-  const user = storedUser ? JSON.parse(storedUser) : null;
 
   useEffect(() => {
     document.body.classList.remove("overflow-hidden");
@@ -37,10 +36,12 @@ const DashboardPage = () => {
         if (user?.isAdmin && view === "all") {
           endpoint = "/events";
         }
-        const res = await api.get(endpoint, {
-          headers: { Authorization: `Bearer ${user?.token}` },
-        });
-        setEvents(res.data);
+        if (user) {
+          const res = await api.get(endpoint, {
+            headers: { Authorization: `Bearer ${user.token}` },
+          });
+          setEvents(res.data);
+        }
       } catch {
         setError("Failed to load events.");
       } finally {
@@ -48,9 +49,7 @@ const DashboardPage = () => {
       }
     };
 
-    if (user) {
-      fetchEvents();
-    }
+    fetchEvents();
   }, [user, view]);
 
   const handleEventCreated = (newEvent: Event) => {
@@ -96,6 +95,11 @@ const DashboardPage = () => {
     setEventsPerPage(parseInt(e.target.value));
     setCurrentPage(1);
     setInputPage("1");
+  };
+
+  const handleLogout = () => {
+    logout(); // sync with Navbar + HomePage
+    navigate("/");
   };
 
   // Pagination
@@ -146,12 +150,20 @@ const DashboardPage = () => {
                 : "My Events"
               : "My Events"}
           </h1>
-          <button
-            onClick={() => setShowModal(true)}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-md"
-          >
-            + Create Event
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setShowModal(true)}
+              className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-md"
+            >
+              + Create Event
+            </button>
+            <button
+              onClick={handleLogout}
+              className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-md"
+            >
+              Logout
+            </button>
+          </div>
         </div>
 
         {loading && <p className="text-center">Loading...</p>}
@@ -204,7 +216,7 @@ const DashboardPage = () => {
           ))}
         </ul>
 
-        {/* Page size selector - always visible */}
+        {/* Page size selector */}
         <div className="flex justify-center mt-8 mb-4">
           <div className="flex items-center gap-2 text-lg font-semibold">
             <span>Show</span>
@@ -221,7 +233,7 @@ const DashboardPage = () => {
           </div>
         </div>
 
-        {/* Pagination controls - only if needed */}
+        {/* Pagination controls */}
         {events.length > eventsPerPage && (
           <div className="flex flex-wrap justify-center gap-4 text-lg font-semibold">
             <button
@@ -276,4 +288,4 @@ const DashboardPage = () => {
   );
 };
 
-export default DashboardPage;
+export default DashboardPage
