@@ -20,7 +20,7 @@ const DashboardPage = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, logout } = useAuth(); // gets global user + logout
+  const { user, logout } = useAuth();
 
   const queryParams = new URLSearchParams(location.search);
   const view = queryParams.get("view") || "my";
@@ -72,7 +72,22 @@ const DashboardPage = () => {
       await api.delete(`/events/${id}`, {
         headers: { Authorization: `Bearer ${user?.token}` },
       });
-      setEvents((prev) => prev.filter((ev) => ev._id !== id));
+
+      setEvents((prev) => {
+        const updatedEvents = prev.filter((ev) => ev._id !== id);
+
+        // if current page is now empty, move to previous or first page
+        const totalPagesAfterDelete = Math.ceil(
+          updatedEvents.length / eventsPerPage
+        );
+        if (currentPage > totalPagesAfterDelete) {
+          setCurrentPage(totalPagesAfterDelete || 1);
+          setInputPage(String(totalPagesAfterDelete || 1));
+        }
+
+        return updatedEvents;
+      });
+
       toast.success("Event deleted successfully");
     } catch {
       toast.error("Failed to delete event");
@@ -82,6 +97,13 @@ const DashboardPage = () => {
   const openEditModal = (event: Event) => {
     setEventToEdit(event);
     setEditMode(true);
+    setShowModal(true);
+  };
+
+  // prevents stale edit state when creating new events
+  const openCreateModal = () => {
+    setEditMode(false);
+    setEventToEdit(null);
     setShowModal(true);
   };
 
@@ -98,7 +120,7 @@ const DashboardPage = () => {
   };
 
   const handleLogout = () => {
-    logout(); // sync with Navbar + HomePage
+    logout();
     navigate("/");
   };
 
@@ -152,7 +174,7 @@ const DashboardPage = () => {
           </h1>
           <div className="flex gap-2">
             <button
-              onClick={() => setShowModal(true)}
+              onClick={openCreateModal}
               className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-md"
             >
               + Create Event
@@ -288,4 +310,4 @@ const DashboardPage = () => {
   );
 };
 
-export default DashboardPage
+export default DashboardPage;
