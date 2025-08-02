@@ -7,7 +7,7 @@ import { useAuth } from '../context/useAuth'
 
 const SettingsPage = () => {
   const navigate = useNavigate()
-  const { user, setUser } = useAuth() // ✅ pull from global auth state
+  const { user, setUser } = useAuth() // pulls from global auth state
 
   const [name, setName] = useState(user?.name || '')
   const [email, setEmail] = useState(user?.email || '')
@@ -31,7 +31,7 @@ const SettingsPage = () => {
         { headers: { Authorization: `Bearer ${user.token}` } }
       )
 
-      // ✅ Sync both localStorage and context
+      // Syncs both localStorage and context
       localStorage.setItem('userInfo', JSON.stringify(data))
       setUser(data)
 
