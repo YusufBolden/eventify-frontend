@@ -32,21 +32,65 @@ const HomePage = () => {
 
   const AdminGrid = () => (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-      <button onClick={() => navigate('/dashboard?view=all')} className="bg-white border border-indigo-600 rounded-lg p-6 text-indigo-700 hover:bg-indigo-50 font-semibold transition">📅 Manage Users Events</button>
-      <button onClick={() => navigate('/dashboard?view=my')} className="bg-white border border-indigo-600 rounded-lg p-6 text-indigo-700 hover:bg-indigo-50 font-semibold transition">📆 My Events</button>
-      <button onClick={() => navigate('/admin')} className="bg-white border border-indigo-600 rounded-lg p-6 text-indigo-700 hover:bg-indigo-50 font-semibold transition">👥 Manage Users</button>
-      <button onClick={() => navigate('/settings')} className="bg-white border border-indigo-600 rounded-lg p-6 text-indigo-700 hover:bg-indigo-50 font-semibold transition">⚙️ Admin Settings</button>
-      <button onClick={() => navigate('/reports')} className="bg-white border border-indigo-600 rounded-lg p-6 text-indigo-700 hover:bg-indigo-50 font-semibold transition">📊 Reports</button>
-      <button onClick={handleLogout} className="bg-red-600 text-white rounded-lg p-6 hover:bg-red-700 font-semibold transition">🚪 Logout</button>
+      <button
+        onClick={() => navigate('/dashboard?view=all')}
+        className="bg-white border border-indigo-600 rounded-lg p-6 text-indigo-700 hover:bg-indigo-50 font-semibold transition"
+      >
+        📅 Manage Events
+      </button>
+      <button
+        onClick={() => navigate('/admin')}
+        className="bg-white border border-indigo-600 rounded-lg p-6 text-indigo-700 hover:bg-indigo-50 font-semibold transition"
+      >
+        👥 Manage Users
+      </button>
+      <button
+        onClick={() => navigate('/settings')}
+        className="bg-white border border-indigo-600 rounded-lg p-6 text-indigo-700 hover:bg-indigo-50 font-semibold transition"
+      >
+        ⚙️ Admin Settings
+      </button>
+      <button
+        onClick={() => navigate('/reports')}
+        className="bg-white border border-indigo-600 rounded-lg p-6 text-indigo-700 hover:bg-indigo-50 font-semibold transition"
+      >
+        📊 Reports
+      </button>
+      <button
+        onClick={handleLogout}
+        className="bg-red-600 text-white rounded-lg p-6 hover:bg-red-700 font-semibold transition"
+      >
+        🚪 Logout
+      </button>
     </div>
   )
 
   const UserGrid = () => (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-      <button onClick={() => navigate('/dashboard?view=my')} className="bg-white border border-indigo-600 rounded-lg p-6 text-indigo-700 hover:bg-indigo-50 font-semibold transition">📅 My Events</button>
-      <button onClick={() => navigate('/guests')} className="bg-white border border-indigo-600 rounded-lg p-6 text-indigo-700 hover:bg-indigo-50 font-semibold transition">🙋 Guest List</button>
-      <button onClick={() => navigate('/settings')} className="bg-white border border-indigo-600 rounded-lg p-6 text-indigo-700 hover:bg-indigo-50 font-semibold transition">⚙️ Settings</button>
-      <button onClick={handleLogout} className="bg-red-600 text-white rounded-lg p-6 hover:bg-red-700 font-semibold transition">🚪 Logout</button>
+      <button
+        onClick={() => navigate('/dashboard?view=my')}
+        className="bg-white border border-indigo-600 rounded-lg p-6 text-indigo-700 hover:bg-indigo-50 font-semibold transition"
+      >
+        📅 My Events
+      </button>
+      <button
+        onClick={() => navigate('/guests')}
+        className="bg-white border border-indigo-600 rounded-lg p-6 text-indigo-700 hover:bg-indigo-50 font-semibold transition"
+      >
+        🙋 Guest List
+      </button>
+      <button
+        onClick={() => navigate('/settings')}
+        className="bg-white border border-indigo-600 rounded-lg p-6 text-indigo-700 hover:bg-indigo-50 font-semibold transition"
+      >
+        ⚙️ Settings
+      </button>
+      <button
+        onClick={handleLogout}
+        className="bg-red-600 text-white rounded-lg p-6 hover:bg-red-700 font-semibold transition"
+      >
+        🚪 Logout
+      </button>
     </div>
   )
 
@@ -74,11 +118,21 @@ const HomePage = () => {
         {/* Carousel */}
         <div className="w-full lg:w-1/2">
           <div className="relative w-full h-80 overflow-hidden rounded-lg shadow-lg">
-            <img src={eventImages[currentIndex]} alt={`Event ${currentIndex + 1}`} className="w-full h-full object-cover transition-all duration-500" />
-            <button onClick={prevSlide} className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-white/80 text-indigo-600 p-2 rounded-full shadow hover:bg-white">
+            <img
+              src={eventImages[currentIndex]}
+              alt={`Event ${currentIndex + 1}`}
+              className="w-full h-full object-cover transition-all duration-500"
+            />
+            <button
+              onClick={prevSlide}
+              className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-white/80 text-indigo-600 p-2 rounded-full shadow hover:bg-white"
+            >
               <FaChevronLeft />
             </button>
-            <button onClick={nextSlide} className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-white/80 text-indigo-600 p-2 rounded-full shadow hover:bg-white">
+            <button
+              onClick={nextSlide}
+              className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-white/80 text-indigo-600 p-2 rounded-full shadow hover:bg-white"
+            >
               <FaChevronRight />
             </button>
           </div>
@@ -88,7 +142,9 @@ const HomePage = () => {
               <button
                 key={idx}
                 onClick={() => setCurrentIndex(idx)}
-                className={`w-3 h-3 rounded-full shadow-md ${idx === currentIndex ? 'bg-indigo-600' : 'bg-white'}`}
+                className={`w-3 h-3 rounded-full shadow-md ${
+                  idx === currentIndex ? 'bg-indigo-600' : 'bg-white'
+                }`}
               ></button>
             ))}
           </div>
@@ -102,17 +158,29 @@ const HomePage = () => {
           <p className="text-lg text-gray-700 mb-6 max-w-lg mx-auto lg:mx-0">
             Eventify helps you manage events, track guests, and simplify planning for any occasion.
           </p>
-          <Link to="/learn-more" className="inline-block mb-8 text-indigo-600 hover:underline font-semibold">
+          <Link
+            to="/learn-more"
+            className="inline-block mb-8 text-indigo-600 hover:underline font-semibold"
+          >
             Learn More →
           </Link>
           <div className="space-x-4">
-            <Link to="/login" className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-md transition">
+            <Link
+              to="/login"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-md transition"
+            >
               User Login
             </Link>
-            <Link to="/admin/login" className="bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-md transition">
+            <Link
+              to="/admin/login"
+              className="bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-md transition"
+            >
               Admin Login
             </Link>
-            <Link to="/register" className="bg-white hover:bg-gray-100 text-indigo-600 font-semibold py-3 px-6 rounded-md border border-indigo-600 transition">
+            <Link
+              to="/register"
+              className="bg-white hover:bg-gray-100 text-indigo-600 font-semibold py-3 px-6 rounded-md border border-indigo-600 transition"
+            >
               Register
             </Link>
           </div>

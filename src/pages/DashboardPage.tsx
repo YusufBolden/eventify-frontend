@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import EventModal from "../modals/EventModal";
 import type { Event } from "../types/Event";
@@ -17,13 +17,10 @@ const DashboardPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [inputPage, setInputPage] = useState("1");
   const [eventsPerPage, setEventsPerPage] = useState(3);
+  const [activeTab, setActiveTab] = useState<"userEvents" | "myEvents">("userEvents");
 
   const navigate = useNavigate();
-  const location = useLocation();
   const { user, logout } = useAuth();
-
-  const queryParams = new URLSearchParams(location.search);
-  const view = queryParams.get("view") || "my";
 
   useEffect(() => {
     document.body.classList.remove("overflow-hidden");
@@ -32,15 +29,27 @@ const DashboardPage = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        let endpoint = "/events/my-events";
-        if (user?.isAdmin && view === "all") {
-          endpoint = "/events";
+        let endpoint = "/events";
+        if (!user?.isAdmin) {
+          endpoint = "/events/my-events";
         }
         if (user) {
           const res = await api.get(endpoint, {
             headers: { Authorization: `Bearer ${user.token}` },
           });
-          setEvents(res.data);
+
+          let fetchedEvents: Event[] = res.data;
+
+          // If admin, separate My Events from User Events
+          if (user?.isAdmin) {
+            if (activeTab === "userEvents") {
+              fetchedEvents = fetchedEvents.filter(ev => ev.owner !== user._id);
+            } else if (activeTab === "myEvents") {
+              fetchedEvents = fetchedEvents.filter(ev => ev.owner === user._id);
+            }
+          }
+
+          setEvents(fetchedEvents);
         }
       } catch {
         setError("Failed to load events.");
@@ -50,7 +59,7 @@ const DashboardPage = () => {
     };
 
     fetchEvents();
-  }, [user, view]);
+  }, [user, activeTab]);
 
   const handleEventCreated = (newEvent: Event) => {
     setEvents((prev) => [...prev, newEvent]);
@@ -73,21 +82,7 @@ const DashboardPage = () => {
         headers: { Authorization: `Bearer ${user?.token}` },
       });
 
-      setEvents((prev) => {
-        const updatedEvents = prev.filter((ev) => ev._id !== id);
-
-        // if current page is now empty, move to previous or first page
-        const totalPagesAfterDelete = Math.ceil(
-          updatedEvents.length / eventsPerPage
-        );
-        if (currentPage > totalPagesAfterDelete) {
-          setCurrentPage(totalPagesAfterDelete || 1);
-          setInputPage(String(totalPagesAfterDelete || 1));
-        }
-
-        return updatedEvents;
-      });
-
+      setEvents((prev) => prev.filter((ev) => ev._id !== id));
       toast.success("Event deleted successfully");
     } catch {
       toast.error("Failed to delete event");
@@ -100,7 +95,6 @@ const DashboardPage = () => {
     setShowModal(true);
   };
 
-  // prevents stale edit state when creating new events
   const openCreateModal = () => {
     setEditMode(false);
     setEventToEdit(null);
@@ -163,12 +157,37 @@ const DashboardPage = () => {
 
   return (
     <div className="px-4 py-8 text-[#4338CA]">
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-4xl mx-auto">
+        {user?.isAdmin && (
+          <div className="flex mb-6 border-b border-gray-300">
+            <button
+              onClick={() => setActiveTab("userEvents")}
+              className={`px-4 py-2 font-semibold ${
+                activeTab === "userEvents"
+                  ? "border-b-2 border-indigo-600 text-indigo-600"
+                  : "text-gray-600 hover:text-indigo-600"
+              }`}
+            >
+              User Events
+            </button>
+            <button
+              onClick={() => setActiveTab("myEvents")}
+              className={`px-4 py-2 font-semibold ${
+                activeTab === "myEvents"
+                  ? "border-b-2 border-indigo-600 text-indigo-600"
+                  : "text-gray-600 hover:text-indigo-600"
+              }`}
+            >
+              My Events
+            </button>
+          </div>
+        )}
+
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold">
             {user?.isAdmin
-              ? view === "all"
-                ? "All Events"
+              ? activeTab === "userEvents"
+                ? "User Events"
                 : "My Events"
               : "My Events"}
           </h1>
