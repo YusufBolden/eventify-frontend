@@ -5,10 +5,15 @@ import type { Event } from '../types/Event'
 import { FaPen, FaTrash, FaArrowLeft } from 'react-icons/fa'
 import { toast } from 'react-hot-toast'
 import EventModal from '../modals/EventModal'
+import { useAuth } from '../context/useAuth'
+import { AxiosError } from 'axios'
 
 const EventPage = () => {
-  const { id } = useParams()
+  const { id } = useParams<{ id: string }>()
+  console.log("EventPage Debug → ID from URL params:", id)
+
   const navigate = useNavigate()
+  const { user } = useAuth()
   const [event, setEvent] = useState<Event | null>(null)
   const [error, setError] = useState('')
   const [showTopBackButton, setShowTopBackButton] = useState(false)
@@ -24,16 +29,34 @@ const EventPage = () => {
 
   useEffect(() => {
     const fetchEvent = async () => {
-      try {
-        const res = await api.get(`/events/${id}`)
-        setEvent(res.data)
-      } catch {
+      if (!user?.token) {
         setError('You must be logged in to view this event.')
+        return
+      }
+
+      try {
+        console.log("EventPage Debug → Fetching event with token:", user.token)
+        const res = await api.get<Event>(`/events/${id}`, {
+          headers: { Authorization: `Bearer ${user.token}` }
+        })
+        setEvent(res.data)
+        setError('')
+      } catch (err: unknown) {
+        const axiosError = err as AxiosError
+        console.error("EventPage Debug → Fetch event failed:", axiosError)
+
+        if (axiosError.response?.status === 401) {
+          setError('You must be logged in to view this event.')
+        } else if (axiosError.response?.status === 404) {
+          setError('Event not found.')
+        } else {
+          setError('Failed to load event.')
+        }
       }
     }
 
     fetchEvent()
-  }, [id])
+  }, [id, user])
 
   useEffect(() => {
     const checkScrollability = () => {
@@ -42,7 +65,6 @@ const EventPage = () => {
         setShowTopBackButton(el.scrollHeight > el.clientHeight + 60)
       }
     }
-
     setTimeout(checkScrollability, 100)
   }, [event])
 
@@ -51,10 +73,14 @@ const EventPage = () => {
     if (!confirmDelete) return
 
     try {
-      await api.delete(`/events/${id}`)
+      await api.delete(`/events/${id}`, {
+        headers: { Authorization: `Bearer ${user?.token}` },
+      })
       toast.success('Event deleted successfully')
       navigate('/dashboard')
-    } catch {
+    } catch (err: unknown) {
+      const axiosError = err as AxiosError
+      console.error("EventPage Debug → Delete event failed:", axiosError)
       toast.error('Failed to delete event')
     }
   }
@@ -73,23 +99,28 @@ const EventPage = () => {
         {error ? (
           <>
             <h1 className="text-4xl font-bold mb-6">{error}</h1>
-            <div className="space-x-4">
-              <button
-                onClick={() => navigate('/login')}
-                className="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded transition"
-              >
-                Login
-              </button>
-              <button
-                onClick={() => navigate('/register')}
-                className="inline-block bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded transition"
-              >
-                Register
-              </button>
-            </div>
+            {error === 'You must be logged in to view this event.' && (
+              <div className="space-x-4">
+                <button
+                  onClick={() => navigate('/login')}
+                  className="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded transition"
+                >
+                  Login
+                </button>
+                <button
+                  onClick={() => navigate('/register')}
+                  className="inline-block bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded transition"
+                >
+                  Register
+                </button>
+              </div>
+            )}
           </>
         ) : event ? (
-          <div className="bg-white shadow-lg rounded-xl p-6 text-left relative max-h-[80vh] overflow-y-auto" ref={contentRef}>
+          <div
+            className="bg-white shadow-lg rounded-xl p-6 text-left relative max-h-[80vh] overflow-y-auto"
+            ref={contentRef}
+          >
             <div className="absolute top-4 right-4 flex gap-2">
               {showTopBackButton && (
                 <button
