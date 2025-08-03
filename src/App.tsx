@@ -9,6 +9,7 @@ import EventPage from "./pages/EventPage";
 import AdminLoginPage from "./pages/AdminLoginPage";
 import AdminPage from "./pages/AdminPage";
 import SettingsPage from "./pages/SettingsPage";
+import LearnMorePage from './pages/LearnMorePage'
 import Toast from "./components/Toast";
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/learn-more" element={<LearnMorePage />} />
           <Route
             path="/events/:id"
             element={

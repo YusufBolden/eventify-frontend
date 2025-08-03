@@ -32,6 +32,16 @@ const Navbar = () => {
             Home
           </Link>
 
+          {/* About link */}
+          <Link
+            to="/learn-more"
+            className={`py-2 px-4 font-semibold rounded ${
+              isActive('/learn-more') ? 'bg-white text-indigo-600' : 'text-white hover:bg-indigo-500'
+            }`}
+          >
+            About
+          </Link>
+
           {/* Logged-in users */}
           {user && !user.isAdmin && (
             <>
@@ -133,7 +143,7 @@ const Navbar = () => {
           )}
         </div>
       </div>
-      <BackButton /> {/* ✅ Back button will appear only where allowed */}
+      <BackButton />
     </nav>
   )
 }
