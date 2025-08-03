@@ -102,7 +102,7 @@ const HomePage = () => {
           <p className="text-lg text-gray-700 mb-6 max-w-lg mx-auto lg:mx-0">
             Eventify helps you manage events, track guests, and simplify planning for any occasion.
           </p>
-          <Link to="/about" className="inline-block mb-8 text-indigo-600 hover:underline font-semibold">
+          <Link to="/learn-more" className="inline-block mb-8 text-indigo-600 hover:underline font-semibold">
             Learn More →
           </Link>
           <div className="space-x-4">
