@@ -1,5 +1,6 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/useAuth'
+import BackButton from './BackButton'
 
 const Navbar = () => {
   const location = useLocation()
@@ -10,7 +11,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout()
-    navigate('/') // ✅ Always go to home after logout
+    navigate('/')
   }
 
   return (
@@ -132,6 +133,7 @@ const Navbar = () => {
           )}
         </div>
       </div>
+      <BackButton /> {/* ✅ Back button will appear only where allowed */}
     </nav>
   )
 }

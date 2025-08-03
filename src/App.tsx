@@ -1,15 +1,15 @@
-import { Routes, Route } from 'react-router-dom'
-import Footer from './components/Footer'
-import Navbar from './components/Navbar'
-import HomePage from './pages/HomePage'
-import LoginPage from './pages/LoginPage'
-import RegisterPage from './pages/RegisterPage'
-import DashboardPage from './pages/DashboardPage'
-import EventPage from './pages/EventPage'
-import AdminLoginPage from './pages/AdminLoginPage'
-import AdminPage from './pages/AdminPage'
-import SettingsPage from './pages/SettingsPage'
-import Toast from './components/Toast'
+import { Routes, Route } from "react-router-dom";
+import Footer from "./components/Footer";
+import Navbar from "./components/Navbar";
+import HomePage from "./pages/HomePage";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+import DashboardPage from "./pages/DashboardPage";
+import EventPage from "./pages/EventPage";
+import AdminLoginPage from "./pages/AdminLoginPage";
+import AdminPage from "./pages/AdminPage";
+import SettingsPage from "./pages/SettingsPage";
+import Toast from "./components/Toast";
 
 function App() {
   return (
@@ -22,15 +22,30 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/events/:id" element={<EventPage />} />
-          <Route path="/settings" element={<SettingsPage />} />
+          <Route
+            path="/events/:id"
+            element={
+                <EventPage />
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+                <SettingsPage />
+            }
+          />
           <Route path="/admin/login" element={<AdminLoginPage />} />
-          <Route path="/admin" element={<AdminPage />} />
+          <Route
+            path="/admin"
+            element={
+                <AdminPage />
+            }
+          />
         </Routes>
       </main>
       <Footer />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
