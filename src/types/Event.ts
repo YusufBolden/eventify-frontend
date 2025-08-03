@@ -5,7 +5,8 @@ export interface Event {
   description?: string
   createdAt?: string
   updatedAt?: string
-  user?: string
+  owner: string
+  collaborators?: string[]
 }
 
 export interface EventModalProps {
