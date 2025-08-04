@@ -74,7 +74,8 @@ backend/
 │   │   ├── Guest.js
 │   │   ├── Settings.js
 │   │   ├── Task.js
-│   │   └── User.js
+│   │   ├── User.js
+│   │   └── UserModal.js
 │   ├── routes/
 │   │   ├── authRoutes.js
 │   │   ├── eventRoutes.js
