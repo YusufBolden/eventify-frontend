@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import api from '../api/axios'
 import type { Event } from '../types/Event'
 import type { UserInfo } from '../types/User'
 
 const AdminUserEventsPage = () => {
   const { id: userId } = useParams<{ id: string }>()
-  const navigate = useNavigate()
 
   const [user, setUser] = useState<UserInfo | null>(null)
   const [events, setEvents] = useState<Event[]>([])
@@ -22,11 +21,12 @@ const AdminUserEventsPage = () => {
       }
     }
 
-    const fetchUserEvents = async () => {
+    const fetchEvents = async () => {
       if (!userId) return
       setLoading(true)
       try {
-        const res = await api.get(`/events`, { params: { userId } })
+        // gets user's events
+        const res = await api.get(`/users/${userId}/events`)
         setEvents(res.data)
       } catch (err) {
         console.error('Failed to fetch events:', err)
@@ -36,19 +36,12 @@ const AdminUserEventsPage = () => {
     }
 
     fetchUser()
-    fetchUserEvents()
+    fetchEvents()
   }, [userId])
 
   return (
     <div className="min-h-screen px-4 py-8 text-[#4338CA] bg-[#E9D5FF]">
       <div className="max-w-4xl mx-auto">
-        <button
-          onClick={() => navigate('/admin')}
-          className="mb-4 text-indigo-600 hover:underline"
-        >
-          ← Back to Manage Users
-        </button>
-
         {user && (
           <h1 className="text-3xl font-bold mb-6">
             Events for {user.name}

@@ -29,7 +29,7 @@ function App() {
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/admin/login" element={<AdminLoginPage />} />
           <Route path="/admin" element={<AdminPage />} />
-          <Route path="/admin/users/:id" element={<AdminUserEventsPage />} />
+          <Route path="/admin/users/:id/events" element={<AdminUserEventsPage />} />
         </Routes>
       </main>
       <Footer />
