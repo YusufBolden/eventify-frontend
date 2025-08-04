@@ -1,6 +1,6 @@
 # 🎓 Eventify – A Modern Collaborative Event Planner
 
-Eventify is a modern, full-stack event planning app designed for individuals and teams who want to streamline the way they plan, organize, and collaborate on events. From weddings and birthdays to conferences and offsites, Eventify lets users create events, send guest invites, manage RSVPs, assign planning tasks, and coordinate logistics with co-hosts — all in one place.
+Eventify is a modern, full-stack event planning app designed for individuals and teams who want to streamline the way they plan, organize, and collaborate on events. From weddings and birthdays to conferences and offsites, Eventify lets users create events, send guest invites, manage RSVPs, assign planning tasks, and coordinate logistics with co-hosts, all in one place.
 
 Built using a mobile-first and accessibility-first approach, Eventify ensures that all users, regardless of device or ability, can plan and participate in events with ease.
 
