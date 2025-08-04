@@ -5,7 +5,7 @@ Eventify is a modern, full-stack event planning app designed for individuals and
 Built using a mobile-first and accessibility-first approach, Eventify ensures that all users, regardless of device or ability, can plan and participate in events with ease.
 
 ## 🚢 Live Deployment
-[View Backend on Render](https://eventify-g0fv.onrender.com)
+[View Frontend on Render](https://eventify-frontend-nvb8.onrender.com)
 
 
 ## 🛠️ Tech Stack
@@ -54,6 +54,7 @@ Built using a mobile-first and accessibility-first approach, Eventify ensures th
 backend/
 ├── src/
 │   ├── config/
+│   │   ├── cloudinary.js
 │   │   └── db.js
 │   ├── controllers/
 │   │   ├── authController.js
@@ -66,7 +67,8 @@ backend/
 │   │   ├── adminMiddleware.js
 │   │   ├── authMiddleware.js
 │   │   ├── errorHandler.js
-│   │   └── ownershipMiddleware.js
+│   │   ├── ownershipMiddleware.js
+│   │   └── uploadMiddleware.js
 │   ├── models/
 │   │   ├── Event.js
 │   │   ├── Guest.js
@@ -79,6 +81,7 @@ backend/
 │   │   ├── guestRoutes.js
 │   │   ├── settingsRoutes.js
 │   │   ├── taskRoutes.js
+│   │   ├── uploadRoutes.js
 │   │   └── userRoutes.js
 │   ├── utils/
 │   │   └── generateToken.js
@@ -96,53 +99,241 @@ frontend/
 ├── vite.config.ts
 ├── tsconfig.json
 ├── package.json
+├── .gitignore
 ├── public/
+│   ├── avatar-placeholder.svg
 │   └── logo.svg
 └── src/
     ├── main.tsx
     ├── App.tsx
     ├── assets/
+    ├── api/
+    │   ├── axios.ts
     ├── types/
-    │   ├── index.ts
-    ├── constants/
-    │   └── index.ts
+    │   ├── Auth.ts
+    │   ├── Event.ts
+    │   ├── Guest.ts
+    │   ├── Settings.ts
+    │   ├── Task.ts
+    │   ├── User.ts
+    ├── components/
+    │   ├── AdminLoginButton.tsx
+    │   ├── BackButton.tsx
+    │   ├── Calendar.tsx
+    │   ├── Footer.tsx
+    │   ├── Header.tsx
+    │   ├── LoadingSpinner.tsx
+    │   ├── Navbar.tsx
+    │   ├── ProtectedRoute.tsx
+    │   └── Toast.tsx
     ├── context/
-    │   └── AuthContext.tsx
-    ├── hooks/
+    │   ├── AuthContext.tsx
+    │   ├── AuthProvider.tsx
+    │   ├── EventContext.tsx
     │   └── useAuth.ts
-    ├── lib/
-    │   └── axios.ts
+    ├── modals/
+    │   ├── EventModal.tsx
+    │   ├── GuestModal.tsx
+    │   ├── SettingsModal.tsx
+    │   └── TaskModal.ts
     ├── pages/
-    │   ├── Home.tsx
-    │   ├── Login.tsx
-    │   ├── Register.tsx
-    │   ├── Dashboard.tsx
-    │   ├── NotFound.tsx
+    │   ├── AdminLoginPage.tsx
+    │   ├── AdminPage.tsx
+    │   ├── AdminUserEventsPage.tsx
+    │   ├── DashboardPage.tsx
+    │   ├── EventPage.tsx
+    │   ├── GuestPage.tsx
+    │   ├── HomePage.tsx
+    │   ├── LearnMorePage.tsx
+    │   ├── LoginPage.tsx
+    │   ├── RegisterPage.tsx
+    │   ├── SettingsPage.tsx
+    │   └── TaskPage.tsx
     ├── components/
     │   ├── Header.tsx
     │   ├── Footer.tsx
     │   ├── ProtectedRoute.tsx
     │   └── LoadingSpinner.tsx
-    ├── features/
-    │   ├── users/
-    │   │   ├── Profile.tsx
-    │   ├── events/
-    │   │   ├── EventList.tsx
-    │   │   └── EventForm.tsx
-    │   ├── guests/
-    │   │   ├── GuestList.tsx
-    │   │   └── GuestForm.tsx
-    │   ├── tasks/
-    │   │   ├── TaskList.tsx
-    │   │   └── TaskForm.tsx
-    │   └── settings/
-    │       ├── SettingsForm.tsx
-    │       └── SettingItem.tsx
-    ├── routes/
-    │   └── AppRoutes.tsx
-    └── styles/
-        └── index.css
+    ├── types/
+    │   ├── Auth.ts
+    │   ├── Event.ts
+    │   ├── Guest.ts
+    │   ├── Settings.ts
+    │   ├── Task.ts
+    │   └── User.ts
+    │   ├── utils/
+            └── api.ts    
 ```
+
+## 🔐 Features
+
+- **User Authentication**
+  - Register and login with hashed passwords
+  - JWT-based secure sessions
+
+- **Protected Routes**
+  - Users can only access their own projects and tasks
+
+- **Event Management**
+  - Create, read, update, delete your own projects
+
+- **Modular Codebase**
+  - Organized by `controllers/`, `models/`, `routes/`, and `utils/`
+  - Clean separation of concerns
+
+---
+## 📮 API Reference
+
+### 👤 User Routes
+
+| Method | Endpoint              | Description              | Auth |
+|--------|-----------------------|--------------------------|:----:|
+| `POST` | `/api/users/register` | Register new user        | 🔓   |
+| `POST` | `/api/users/login`    | Login and return JWT     | 🔓   |
+
+---
+
+### 📁 User Routes
+
+| Method  | Endpoint              | Description                 | Auth |
+|---------|-----------------------|-----------------------------|:----:|
+| `POST`  | `/api/users`          | Create a new user           | 🔒   |
+| `GET`   | `/api/users`          | Get all users               | 🔒   |
+| `GET`   | `/api/users/:id`      | Get a single user by ID     | 🔒   |
+| `PUT`   | `/api/users/:id`      | Update a user               | 🔒   |
+| `DELETE`| `/api/users/:id`      | Delete a user               | 🔒   |
+
+---
+
+### ✅ Event Routes
+
+| Method  | Endpoint                                | Description                  | Auth |
+|---------|-----------------------------------------|------------------------------|:----:|
+| `POST`  | `/api/userevents/:id/`                  | Create a new event.          | 🔒   |
+| `GET`   | `/api/dashboard?view=my`                | Get events for a user.       | 🔒   |
+| `PUT`   | `/api/events/:id`                       | Update a event by ID         | 🔒   |
+| `DELETE`| `/api/events/:id`                       | Delete a event by ID         | 🔒   |
+
+---
+
+### 🔐 Legend
+
+- 🔓 = Public (no token required)
+- 🔒 = Protected (JWT token required)
+
+---
+
+## 📫 Testing with Postman
+
+1. Import this API manually in Postman or create a new collection.
+2. Register a new user:  
+   `POST /api/users/register` with JSON body:
+   ```json
+   {
+     "username": "yusuf",
+     "email": "yusuf@example.com",
+     "password": "123456"
+   }
+   ```
+3. Login:  
+   `POST /api/users/login` → Save the returned token
+4. Set `Authorization: Bearer <your_token>` for protected routes
+5. Test project and task endpoints as needed
+
+---
+
+## 🧪 How to Test All Routes
+
+### 🔐 Step 1: Register & Login
+
+1. Register
+    ```http
+    POST /api/users/register
+    Content-Type: application/json
+    ```
+    ```json
+    {
+      "username": "testuser",
+      "email": "test@example.com",
+      "password": "123456"
+    }
+    ```
+
+2. Login
+    ```http
+    POST /api/users/login
+    ```
+    → Save the returned token.
+
+---
+
+### 📁 Step 2: Test User Routes
+
+Add the following header to all requests:
+```
+Authorization: Bearer <your_token>
+```
+
+- Create User:
+  ```http
+  POST /api/users/register
+  ```
+  ```json
+  {
+    "name": "new user",
+    "email": "Test new user",
+    "password": "userpassword"
+  }
+  ```
+
+- Get All Users: (admin only)
+  ```http
+  GET /api/user
+  ```
+
+- Update User:
+  ```http
+  PUT /api/user/:id
+  ```
+
+- Delete User:
+  ```http
+  DELETE /api/userjects/:id
+  ```
+
+---
+
+### ✅ Step 3: Test Event Routes
+
+- Create Event:
+  ```http
+  POST /api/events/:id/
+  ```
+  ```json
+  {
+    "title": "First event",
+    "date": "Write docs",
+    "description": "Wedding"
+  }
+  ```
+
+- Get Events:
+  ```http
+  GET /api/events/id/
+  ```
+
+- Update Events:
+  ```http
+  PUT /api/events/:id
+  ```
+
+- Delete Event:
+  ```http
+  DELETE /api/event/:id
+  ```
+
+---
+
 
 ## 🧑🏿‍💻 Author
 
