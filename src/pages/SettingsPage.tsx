@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import api from '../api/axios'
 import { toast } from 'react-hot-toast'
@@ -18,12 +18,15 @@ const SettingsPage = () => {
     user?.isAdmin ? 'admin' : 'my'
   )
 
-  // Redirect if no user
-  if (!user) {
-    navigate('/login')
-    return null
-  }
+  useEffect(() => {
+    if (!user) {
+      navigate('/login')
+    }
+  }, [user, navigate])
 
+  if (!user) {
+    return null 
+  }
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
@@ -142,12 +145,12 @@ const SettingsPage = () => {
                   alt="Profile Preview"
                   className="w-24 h-24 rounded-full object-cover mb-3 border border-gray-300"
                 />
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                  className="block w-full text-sm text-gray-700 border border-gray-300 rounded p-2"
-                />
+               <input
+  type="file"
+  accept="image/*"
+  onChange={handleFileChange}
+  className="block w-full text-sm text-gray-700 border border-gray-300 rounded p-2 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-gray-100 file:text-gray-800 hover:file:bg-gray-200 file:shadow-sm"
+/>
               </div>
 
               {/* Name */}
