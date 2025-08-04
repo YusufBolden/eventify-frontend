@@ -5,7 +5,7 @@ import type { Event } from '../types/Event'
 import type { UserInfo } from '../types/User'
 
 const AdminPage = () => {
-  const [activeTab] = useState<'users'>('users') // Only one tab now
+  const [activeTab] = useState<'users'>('users')
   const [users, setUsers] = useState<UserInfo[]>([])
   const [selectedUser, setSelectedUser] = useState<UserInfo | null>(null)
   const [userEvents, setUserEvents] = useState<Event[]>([])
