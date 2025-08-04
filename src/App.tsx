@@ -8,6 +8,7 @@ import DashboardPage from "./pages/DashboardPage";
 import EventPage from "./pages/EventPage";
 import AdminLoginPage from "./pages/AdminLoginPage";
 import AdminPage from "./pages/AdminPage";
+import AdminUserEventsPage from "./pages/AdminUserEventsPage";
 import SettingsPage from "./pages/SettingsPage";
 import LearnMorePage from './pages/LearnMorePage'
 import Toast from "./components/Toast";
@@ -24,25 +25,11 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/learn-more" element={<LearnMorePage />} />
-          <Route
-            path="/events/:id"
-            element={
-                <EventPage />
-            }
-          />
-          <Route
-            path="/settings"
-            element={
-                <SettingsPage />
-            }
-          />
+          <Route path="/events/:id" element={<EventPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
           <Route path="/admin/login" element={<AdminLoginPage />} />
-          <Route
-            path="/admin"
-            element={
-                <AdminPage />
-            }
-          />
+          <Route path="/admin" element={<AdminPage />} />
+          <Route path="/admin/users/:id" element={<AdminUserEventsPage />} />
         </Routes>
       </main>
       <Footer />
